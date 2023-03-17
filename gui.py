@@ -1,23 +1,25 @@
 import tkinter as tk
-from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,find_shared_eq
+from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq
 import json
 
 # Create the main window
 root = tk.Tk()
-root.geometry("400x1200")
+root.geometry("800x1200")
 
 # Create a label
 label = tk.Label(root, text="Enter the numbers seperated by a space:")
 spins_label = tk.Label(root, text="Enter the last spin:")
 number_of_spins_label = tk.Label(root, text="Number of last spins to exclude:")
+find_by_num_shared_label = tk.Label(root, text="Filter by number of times shared:")
 
 # Create a text input field
 entry = tk.Entry(root)
 last_spins = tk.Entry(root)
 number_last_spins = tk.Entry(root)
+find_by_num_shared = tk.Entry(root)
 
 # Checkboxes
-only_shared_var = tk.BooleanVar()
+selected_option = tk.StringVar()
 plus_20_var = tk.BooleanVar()
 minus_20_var = tk.BooleanVar()
 plus_10_var = tk.BooleanVar()
@@ -28,8 +30,11 @@ LEFT_var = tk.BooleanVar()
 RIGHT_var = tk.BooleanVar()
 SPECIAL_var = tk.BooleanVar()
 
+# Default drop down
+selected_option.set("ALL VALUES")
+
 # Create a checkbox with the BooleanVar as its variable
-only_shared = tk.Checkbutton(root, text="ONLY SHARED EQUIVALENTS", variable=only_shared_var)
+dropdown = tk.OptionMenu(root, selected_option, "ALL VALUES", "NON-EXCLUSIVE SHARED", "EXCLUSIVE SHARED")
 plus_20 = tk.Checkbutton(root, text="+20", variable=plus_20_var)
 minus_20 = tk.Checkbutton(root, text="-20", variable=minus_20_var)
 plus_10 = tk.Checkbutton(root, text="+10", variable=plus_10_var)
@@ -106,10 +111,54 @@ def submit():
         "RIGHT": RIGHT_var.get(),
         "SPECIAL": SPECIAL_var.get()
     }
-    if only_shared_var.get():
-        equivalent = find_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
+    option = selected_option.get()
 
-    outputlabel.config(text=equivalent)
+    if option == "EXCLUSIVE SHARED":
+
+        if find_by_num_shared.get():
+
+            equivalent = ex_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
+
+            equivalent = filter_num_shared(equivalent[0], equivalent[1], int(find_by_num_shared.get()))
+
+            equivalent = pretty_eq(equivalent[0], equivalent[1])
+
+            outputlabel.config(text=equivalent)
+        
+        else:
+
+            equivalent = ex_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
+
+            equivalent = pretty_eq(equivalent[0], equivalent[1])
+
+            outputlabel.config(text=equivalent)
+
+    elif option == "NON-EXCLUSIVE SHARED":
+
+        if find_by_num_shared.get():
+
+            equivalent = nonex_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
+
+            equivalent = filter_num_shared(equivalent[0], equivalent[1], int(find_by_num_shared.get()))
+
+            equivalent = pretty_eq(equivalent[0], equivalent[1])
+
+            outputlabel.config(text=equivalent)
+        
+        else:
+
+            equivalent = nonex_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
+
+            equivalent = pretty_eq(equivalent[0], equivalent[1])
+
+            outputlabel.config(text=equivalent)
+    
+    elif option == "ALL VALUES":
+
+        equivalent = find_equivalent(entry.get(), type_dict, excluded_spins)
+
+        outputlabel.config(text=equivalent)
+
     
 
     
@@ -138,7 +187,9 @@ last_spins_backspace.pack()
 last_spins_clear.pack()
 number_of_spins_label.pack()
 number_last_spins.pack()
-only_shared.pack()
+dropdown.pack()
+find_by_num_shared_label.pack()
+find_by_num_shared.pack()
 plus_20.pack()
 minus_20.pack()
 plus_10.pack()

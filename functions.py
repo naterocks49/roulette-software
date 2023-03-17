@@ -55,7 +55,7 @@ def find_equivalent(numbers, type_dict, excluded_spins):
 
     return new_final
 
-def find_shared_eq(dict):
+def ex_shared_eq(dict):
 
     all_vals = []
 
@@ -65,17 +65,69 @@ def find_shared_eq(dict):
             temp.append(dict[i][j])
         all_vals.append(temp)
     
-    
-
     shared = list(reduce(lambda i, j: i & j, (set(x) for x in all_vals)))
 
     for i in shared:
         if i == "None":
             shared.remove(i)
 
-    print(shared)
+    count = []
+    for i in range(len(shared)):
+        count.append(0)
+
+    for ind, val in enumerate(shared):
+
+        for idex, j in enumerate(all_vals):
+
+            for t in all_vals[idex]:
+
+                if val == t:
+
+                    count[ind] += 1
+
     
-    return shared
+    
+    return shared, count
+
+def nonex_shared_eq(dict):
+    shared = []
+    all_values = []
+
+    for i in dict:
+        temp = []
+        for j in dict[i]:
+            temp.append(dict[i][j])
+        all_values.append(temp)
+
+    all_vals = set()
+    common_vals = set()
+
+    for sub_arr in all_values:
+        sub_arr_set = set(sub_arr)
+        common_vals |= all_vals & sub_arr_set
+        all_vals |= sub_arr_set
+
+    for i in list(common_vals):
+
+        if i != 'None':
+            shared.append(i)
+
+    count = []
+    for i in range(len(shared)):
+        count.append(0)
+
+    for ind, val in enumerate(shared):
+
+        for idex, j in enumerate(all_values):
+
+            for t in all_values[idex]:
+
+                if val == t:
+
+                    count[ind] += 1
+
+    return shared, count
+            
 
 def grab_spins():
 
@@ -86,8 +138,16 @@ def grab_spins():
 
     for i in spins:
         spins_arr.insert(0, spins[i])
+
+    spins_str = ""
+
+    for ind, val in enumerate(spins_arr):
+        if ind == 0:
+            spins_str += f"LAST SPIN: {val}\n"
+        else:
+            spins_str += f"{val}\n"
     
-    return spins_arr
+    return spins_str
 
 def add_last_spin(val):
     with open('last_spins.json', 'r') as f:
@@ -111,3 +171,23 @@ def clear_spins():
     empty = {}
     with open('last_spins.json', 'w') as f:
         json.dump(empty, f, indent=4)
+
+def filter_num_shared(shared, count, filter):
+
+    final_shared = []
+    final_count = []
+    for ind, val in enumerate(shared):
+        if count[ind] == filter:
+            final_shared.append(val)
+            final_count.append(count[ind])
+
+    return final_shared, final_count
+
+
+def pretty_eq(shared, count):
+
+    textoutput = ""
+    for ind, val in enumerate(shared):
+        textoutput += f"Shared value: {str(val)} appears {str(count[ind])} time/s.\n"
+    
+    return textoutput
