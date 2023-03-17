@@ -1,5 +1,5 @@
 import tkinter as tk
-from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq
+from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq, pretty_output
 import json
 
 # Create the main window
@@ -156,6 +156,8 @@ def submit():
     elif option == "ALL VALUES":
 
         equivalent = find_equivalent(entry.get(), type_dict, excluded_spins)
+
+        equivalent = pretty_output(equivalent)
 
         outputlabel.config(text=equivalent)
 
