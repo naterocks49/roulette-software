@@ -10,6 +10,7 @@ def pretty_output(dict):
         string += f"{num}:\n"
         for type in dict[num]:
             string += f"{type}: {dict[num][type]}\n"
+        string += "\n"
 
     return string
             

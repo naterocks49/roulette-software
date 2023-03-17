@@ -45,24 +45,6 @@ LEFT = tk.Checkbutton(root, text="LEFT", variable=LEFT_var)
 RIGHT = tk.Checkbutton(root, text="RIGHT", variable=RIGHT_var)
 SPECIAL = tk.Checkbutton(root, text="SPECIAL", variable=SPECIAL_var)
 
-
-# Function
-def update_label():
-    type_dict = {
-        "20": plus_20_var.get(),
-        "-20": minus_20_var.get(),
-        "10": plus_10_var.get(),
-        "-10": minus_10_var.get(),
-        "1": plus_1_var.get(),
-        "-1": minus_1_var.get(),
-        "LEFT": LEFT_var.get(),
-        "RIGHT": RIGHT_var.get(),
-        "SPECIAL": SPECIAL_var.get()
-    }
-    equivalent = find_equivalent(entry.get(), type_dict)
-
-    outputlabel.config(text=equivalent)
-
 # Add last spins
 def add_spins():
 
@@ -123,7 +105,8 @@ def submit():
 
             equivalent = pretty_eq(equivalent[0], equivalent[1])
 
-            outputlabel.config(text=equivalent)
+            outputlabel.delete(1.0, tk.END)
+            outputlabel.insert(tk.END, equivalent)
         
         else:
 
@@ -131,7 +114,8 @@ def submit():
 
             equivalent = pretty_eq(equivalent[0], equivalent[1])
 
-            outputlabel.config(text=equivalent)
+            outputlabel.delete(1.0, tk.END)
+            outputlabel.insert(tk.END, equivalent)
 
     elif option == "NON-EXCLUSIVE SHARED":
 
@@ -143,7 +127,8 @@ def submit():
 
             equivalent = pretty_eq(equivalent[0], equivalent[1])
 
-            outputlabel.config(text=equivalent)
+            outputlabel.delete(1.0, tk.END)
+            outputlabel.insert(tk.END, equivalent)
         
         else:
 
@@ -151,15 +136,16 @@ def submit():
 
             equivalent = pretty_eq(equivalent[0], equivalent[1])
 
-            outputlabel.config(text=equivalent)
+            outputlabel.delete(1.0, tk.END)
+            outputlabel.insert(tk.END, equivalent)
     
     elif option == "ALL VALUES":
 
         equivalent = find_equivalent(entry.get(), type_dict, excluded_spins)
 
         equivalent = pretty_output(equivalent)
-
-        outputlabel.config(text=equivalent)
+        outputlabel.delete(1.0, tk.END)
+        outputlabel.insert(tk.END, equivalent)
 
     
 
@@ -175,7 +161,7 @@ last_spins_backspace = tk.Button(root, text="Backspace", command=backspace_spins
 last_spins_clear = tk.Button(root, text="Clear spins", command=clear_spins_func)
 
 # Output label
-outputlabel = tk.Label(root, text="",font=("Arial", 18), fg="red")
+outputlabel = tk.Text(root,font=("Arial", 18), fg="red")
 lastspinslabel = tk.Label(root, text=spins_list,font=("Arial", 18), fg="red")
 
 # Pack the label, entry, and button into the main window
@@ -202,7 +188,11 @@ LEFT.pack()
 RIGHT.pack()
 SPECIAL.pack()
 button.pack()
-outputlabel.pack()
+outputlabel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+scrollbar = tk.Scrollbar(root, command=outputlabel.yview)
+scrollbar.pack( fill=tk.Y)
+outputlabel.config(yscrollcommand=scrollbar.set)
 
 # Start the event loop
 root.mainloop()
