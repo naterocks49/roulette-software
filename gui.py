@@ -1,5 +1,5 @@
 import tkinter as tk
-from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins
+from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,find_shared_eq
 import json
 
 # Create the main window
@@ -106,8 +106,8 @@ def submit():
         "RIGHT": RIGHT_var.get(),
         "SPECIAL": SPECIAL_var.get()
     }
-
-    equivalent = find_equivalent(entry.get(), type_dict, excluded_spins)
+    if only_shared_var.get():
+        equivalent = find_shared_eq(find_equivalent(entry.get(), type_dict, excluded_spins))
 
     outputlabel.config(text=equivalent)
     

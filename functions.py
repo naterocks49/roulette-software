@@ -68,6 +68,12 @@ def find_shared_eq(dict):
     
 
     shared = list(reduce(lambda i, j: i & j, (set(x) for x in all_vals)))
+
+    for i in shared:
+        if i == "None":
+            shared.remove(i)
+
+    print(shared)
     
     return shared
 
