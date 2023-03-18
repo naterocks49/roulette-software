@@ -162,6 +162,7 @@ def add_last_spin(val):
     count = len(vals_arr) + 1
     for i in vals_arr:
         spins[str(count)] = i
+        count += 1
 
     with open('last_spins.json', 'w') as f:
         json.dump(spins,f, indent=4)
