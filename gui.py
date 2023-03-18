@@ -1,5 +1,5 @@
 import tkinter as tk
-from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq, pretty_output
+from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq, pretty_output, clean_grab_spins
 import json
 
 # Create the main window
@@ -52,6 +52,8 @@ def add_spins():
 
     spins_list = grab_spins()
 
+    spins_list = clean_grab_spins(spins_list)
+
     lastspinslabel.config(text=spins_list)
 
 # Del last spins
@@ -61,6 +63,8 @@ def backspace_spins():
 
     spins_list = grab_spins()
 
+    spins_list = clean_grab_spins(spins_list)
+
     lastspinslabel.config(text=spins_list)
 
 def clear_spins_func():
@@ -68,6 +72,8 @@ def clear_spins_func():
     clear_spins()
 
     spins_list = grab_spins()
+
+    spins_list = clean_grab_spins(spins_list)
 
     lastspinslabel.config(text=spins_list)
 

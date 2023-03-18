@@ -140,6 +140,10 @@ def grab_spins():
     for i in spins:
         spins_arr.insert(0, spins[i])
 
+    return spins_arr
+
+def clean_grab_spins(spins_arr):
+
     spins_str = ""
 
     for ind, val in enumerate(spins_arr):
@@ -154,7 +158,10 @@ def add_last_spin(val):
     with open('last_spins.json', 'r') as f:
         spins = json.load(f)
 
-    spins[str(len(spins) + 1)] = val
+    vals_arr = [num for num in val.split()]
+    count = len(vals_arr) + 1
+    for i in vals_arr:
+        spins[str(count)] = i
 
     with open('last_spins.json', 'w') as f:
         json.dump(spins,f, indent=4)
