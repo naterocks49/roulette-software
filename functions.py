@@ -15,7 +15,7 @@ def pretty_output(dict):
     return string
             
 
-def find_equivalent(numbers, type_dict, excluded_spins):
+def find_equivalent(numbers, type_dict, excluded_spins, values_to_ignore):
 
     print(excluded_spins)
 
@@ -50,9 +50,10 @@ def find_equivalent(numbers, type_dict, excluded_spins):
         for val in final_dict[num]:
             
             
-            if final_dict[num][val] not in excluded_spins:
+            if final_dict[num][val] not in excluded_spins and final_dict[num][val] not in values_to_ignore:
                 
                 new_final[num][val] = final_dict[num][val]
+    print(new_final)
 
     return new_final
 
@@ -188,7 +189,7 @@ def filter_num_shared(shared, count, filter):
     final_shared = []
     final_count = []
     for ind, val in enumerate(shared):
-        if count[ind] == filter:
+        if count[ind] >= filter:
             final_shared.append(val)
             final_count.append(count[ind])
 
@@ -202,3 +203,25 @@ def pretty_eq(shared, count):
         textoutput += f"Shared value: {str(val)} appears {str(count[ind])} time/s.\n"
     
     return textoutput
+
+def replace_with_file(fn):
+
+    temp = []
+
+    final = {}
+
+    with open(fn, 'r') as f:
+        data = f.read()
+
+    for num in data:
+        if num != '\n':
+            temp.insert(0, num)
+
+    count = 1
+
+    for val in temp:        
+        final[str(count)] = val
+        count += 1
+
+    with open('last_spins.json', 'w') as f:
+        json.dump(final, f, indent=4)
