@@ -1,25 +1,29 @@
 import tkinter as tk
-from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, filter_num_shared, pretty_eq, nonex_shared_eq, pretty_output, clean_grab_spins
-import json
+from functions import find_equivalent, grab_spins, add_last_spin, backspace_spin, clear_spins,ex_shared_eq, clean_grab_spins, pretty_eq, pretty_output, filter_num_shared, nonex_shared_eq
+import customtkinter
+
+# Set customtkinter defaults
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("blue")
 
 # Create the main window
-root = tk.Tk()
+root = customtkinter.CTk()
 root.geometry("800x1200")
 
 # Create a label
-label = tk.Label(root, text="Enter the numbers seperated by a space:")
-spins_label = tk.Label(root, text="Enter the last spin:")
-number_of_spins_label = tk.Label(root, text="Number of last spins to exclude:")
-find_by_num_shared_label = tk.Label(root, text="Filter by number of times shared:")
+label = customtkinter.CTkLabel(master=root, text="Enter the numbers seperated by a space:")
+spins_label =  customtkinter.CTkLabel(master=root, text="Enter the last spin:")
+number_of_spins_label = customtkinter.CTkLabel(master=root, text="Number of last spins to exclude:")
+find_by_num_shared_label = customtkinter.CTkLabel(master=root, text="Filter by number of times shared:")
 
 # Create a text input field
-entry = tk.Entry(root)
-last_spins = tk.Entry(root)
-number_last_spins = tk.Entry(root)
-find_by_num_shared = tk.Entry(root)
+entry = customtkinter.CTkEntry(root)
+last_spins = customtkinter.CTkEntry(root)
+number_last_spins = customtkinter.CTkEntry(root)
+find_by_num_shared = customtkinter.CTkEntry(root)
 
 # Checkboxes
-selected_option = tk.StringVar()
+selected_option = tk.BooleanVar()
 plus_20_var = tk.BooleanVar()
 minus_20_var = tk.BooleanVar()
 plus_10_var = tk.BooleanVar()
@@ -29,21 +33,20 @@ minus_1_var = tk.BooleanVar()
 LEFT_var = tk.BooleanVar()
 RIGHT_var = tk.BooleanVar()
 SPECIAL_var = tk.BooleanVar()
-
-# Default drop down
-selected_option.set("ALL VALUES")
+option = customtkinter.StringVar(value="ALL VALUES")
 
 # Create a checkbox with the BooleanVar as its variable
-dropdown = tk.OptionMenu(root, selected_option, "ALL VALUES", "NON-EXCLUSIVE SHARED", "EXCLUSIVE SHARED")
-plus_20 = tk.Checkbutton(root, text="+20", variable=plus_20_var)
-minus_20 = tk.Checkbutton(root, text="-20", variable=minus_20_var)
-plus_10 = tk.Checkbutton(root, text="+10", variable=plus_10_var)
-minus_10 = tk.Checkbutton(root, text="-10", variable=minus_10_var)
-plus_1 = tk.Checkbutton(root, text="+1", variable=plus_1_var)
-minus_1 = tk.Checkbutton(root, text="-1", variable=minus_1_var)
-LEFT = tk.Checkbutton(root, text="LEFT", variable=LEFT_var)
-RIGHT = tk.Checkbutton(root, text="RIGHT", variable=RIGHT_var)
-SPECIAL = tk.Checkbutton(root, text="SPECIAL", variable=SPECIAL_var)
+dropdown = customtkinter.CTkOptionMenu(master=root,  values= ["ALL VALUES", "NON-EXCLUSIVE SHARED", "EXCLUSIVE SHARED"], variable=option)
+dropdown.set("ALL VALUES")
+plus_20 = customtkinter.CTkCheckBox(master=root, text="+20", variable=plus_20_var)
+minus_20 = customtkinter.CTkCheckBox(master=root, text="-20", variable=minus_20_var)
+plus_10 = customtkinter.CTkCheckBox(master=root, text="+10", variable=plus_10_var)
+minus_10 = customtkinter.CTkCheckBox(master=root, text="-10", variable=minus_10_var)
+plus_1 = customtkinter.CTkCheckBox(master=root, text="+1", variable=plus_1_var)
+minus_1 = customtkinter.CTkCheckBox(master=root, text="-1", variable=minus_1_var)
+LEFT = customtkinter.CTkCheckBox(master=root, text="LEFT", variable=LEFT_var)
+RIGHT = customtkinter.CTkCheckBox(master=root, text="RIGHT", variable=RIGHT_var)
+SPECIAL = customtkinter.CTkCheckBox(master=root, text="SPECIAL", variable=SPECIAL_var)
 
 # Add last spins
 def add_spins():
@@ -54,7 +57,7 @@ def add_spins():
 
     spins_list = clean_grab_spins(spins_list)
 
-    lastspinslabel.config(text=spins_list)
+    lastspinslabel.configure(text=spins_list)
 
 # Del last spins
 def backspace_spins():
@@ -65,7 +68,7 @@ def backspace_spins():
 
     spins_list = clean_grab_spins(spins_list)
 
-    lastspinslabel.config(text=spins_list)
+    lastspinslabel.configure(text=spins_list)
 
 def clear_spins_func():
 
@@ -75,7 +78,7 @@ def clear_spins_func():
 
     spins_list = clean_grab_spins(spins_list)
 
-    lastspinslabel.config(text=spins_list)
+    lastspinslabel.configure(text=spins_list)
 
 def submit():
     
@@ -99,9 +102,9 @@ def submit():
         "RIGHT": RIGHT_var.get(),
         "SPECIAL": SPECIAL_var.get()
     }
-    option = selected_option.get()
-
-    if option == "EXCLUSIVE SHARED":
+    
+    main_option = option.get()
+    if main_option == "EXCLUSIVE SHARED":
 
         if find_by_num_shared.get():
 
@@ -123,7 +126,7 @@ def submit():
             outputlabel.delete(1.0, tk.END)
             outputlabel.insert(tk.END, equivalent)
 
-    elif option == "NON-EXCLUSIVE SHARED":
+    elif main_option == "NON-EXCLUSIVE SHARED":
 
         if find_by_num_shared.get():
 
@@ -145,13 +148,14 @@ def submit():
             outputlabel.delete(1.0, tk.END)
             outputlabel.insert(tk.END, equivalent)
     
-    elif option == "ALL VALUES":
+    elif main_option == "ALL VALUES":
+        print('Got here')
 
         equivalent = find_equivalent(entry.get(), type_dict, excluded_spins)
 
         equivalent = pretty_output(equivalent)
-        outputlabel.delete(1.0, tk.END)
-        outputlabel.insert(tk.END, equivalent)
+        outputlabel.delete("0.0", 'end')
+        outputlabel.insert("0.0", equivalent)
 
     
 
@@ -161,14 +165,14 @@ def submit():
 spins_list = grab_spins()
 
 # Create a button
-button = tk.Button(root, text="Submit", command=submit)
-last_spins_add = tk.Button(root, text="Enter Last Spin", command=add_spins)
-last_spins_backspace = tk.Button(root, text="Backspace", command=backspace_spins)
-last_spins_clear = tk.Button(root, text="Clear spins", command=clear_spins_func)
+button = customtkinter.CTkButton(master=root, text="Submit", command=submit)
+last_spins_add = customtkinter.CTkButton(master=root, text="Enter Last Spin", command=add_spins)
+last_spins_backspace = customtkinter.CTkButton(master=root, text="Backspace", command=backspace_spins)
+last_spins_clear = customtkinter.CTkButton(master=root, text="Clear spins", command=clear_spins_func)
 
 # Output label
-outputlabel = tk.Text(root,font=("Arial", 18), fg="red")
-lastspinslabel = tk.Label(root, text=spins_list,font=("Arial", 18), fg="red")
+outputlabel = customtkinter.CTkTextbox(master=root,font=("Arial", 18))
+lastspinslabel = customtkinter.CTkLabel(master=root, text=spins_list,font=("Arial", 18))
 
 # Pack the label, entry, and button into the main window
 label.pack()
@@ -198,7 +202,7 @@ outputlabel.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
 scrollbar = tk.Scrollbar(root, command=outputlabel.yview)
 scrollbar.pack( fill=tk.Y)
-outputlabel.config(yscrollcommand=scrollbar.set)
+outputlabel.configure(yscrollcommand=scrollbar.set)
 
 # Start the event loop
 root.mainloop()

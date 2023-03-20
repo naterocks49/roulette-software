@@ -125,6 +125,8 @@ def nonex_shared_eq(dict):
 
                 if val == t:
 
+                    print("Found shared at ")
+
                     count[ind] += 1
 
     return shared, count
@@ -159,7 +161,7 @@ def add_last_spin(val):
         spins = json.load(f)
 
     vals_arr = [num for num in val.split()]
-    count = len(vals_arr) + 1
+    count = len(spins) + 1
     for i in vals_arr:
         spins[str(count)] = i
         count += 1
